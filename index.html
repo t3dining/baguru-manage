@@ -2,52 +2,33 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">   <!-- maximum-scale：iPhone で、小さい字の欄（画面で直す の直す欄）を押したときに、画面が大きくならないように -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<!-- バグるマネージは https://t3dining-store.github.io/baguru-manage/ へ引っ越した（お店用アプリの引っ越し。../../お店用アプリの引っ越し.md）。
+     ★引っ越しの日まで出さない（用意だけ）。引っ越しの日に、公開の道具（../../道具/公開する.py の MOVED）が、前の公開先 t3dining/baguru-manage に index.html として出す。
+     前のアドレス（https://t3dining.github.io/baguru-manage/）は、公式アプリと保存場所が同じなので、開いたら、ここに残ったお店の保存を消して、新しいアドレスへのボタンを出す。
+     ★自動では移らない（ホーム画面のアイコンを入れ直してもらうため） -->
+<title>バグるマネージ</title>
 <script>
-  /* バグる Owner の中から開いたとき（?from=owner）だけ、viewport-fit=cover を外す（2026-11-01。予約ボードと同じ）。
-     iPhone のホーム画面のアプリで別のページへ移ると、cover のままでは、使える高さが時計の帯のぶん短いのに上の端が時計の下にもぐり、
-     下にすき間ができて全体が上に寄る。ホーム画面から直接開くときは、今までのまま。くわしくは バグる Owner の README */
   (function () {
-    var owner = /[?&]from=owner\b/.test(location.search);
-    try { owner = owner || sessionStorage.getItem('bg.fromOwner') === '1'; } catch (e) {}
-    if (!owner) return;
-    var v = document.querySelector('meta[name="viewport"]');
-    v.setAttribute('content', v.getAttribute('content').replace(/,\s*viewport-fit=cover/, ''));
-    addEventListener('pageshow', function (e) { if (!e.persisted) scrollTo(0, 0); });   // 切り替えたときのずれが残らないように
+    // ★お店用アプリの引っ越し.md の「古い場所で消すもの」を全部、名前で1つずつ消す（1つの古いアイコンしか開かない端末もある）。
+    //   bg. で始まる名前は、公式アプリのお客様の保存にも使っているので、まとめて消さない
+    var names = ['baguru.daicho.pin', 'baguru.daicho.seen', 'baguru.daicho.sound', 'baguru.daicho.shell', 'baguru.line.screen',
+      'bg.hpAdmin', 'baguru.yoyaku.owner', 'baguru.yoyaku.view', 'bg.cookRung', 'bg.hub', 'bg.owner'];
+    [function () { return localStorage; }, function () { return sessionStorage; }].forEach(function (box) {
+      try { var b = box(); names.forEach(function (k) { b.removeItem(k); }); } catch (e) {}
+    });
   })();
 </script>
-<meta name="robots" content="noindex, nofollow">   <!-- 管理の画面なので、検索に出さない -->
-<meta name="theme-color" content="#1f1916">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="バグるマネージ">
-<title>バグるマネージ</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" href="img/manage-icon-192.png">
-<link rel="apple-touch-icon" href="img/manage-icon-180.png">
-<!-- 字の形は公式アプリ・ホームページと同じ（太さも同じものを読む。画面で直す の直す欄で、改行の場所をアプリとそろえるため）。読めないときは、スマホの字で出る -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
-<link rel="stylesheet" href="css/manage.css?v=64eb8b70">
 </head>
-<body>
-<header class="m-top">
-  <button id="homeBtn" class="m-home" hidden>🏠 ホーム</button>   <!-- バグる Owner から開いたときだけ（manage.js） -->
-  <h1><img src="img/manage-icon-192.png" alt=""><span>バグるマネージ</span></h1>
-  <button id="saveBtn" class="m-save" hidden disabled>保存</button>
-</header>
-<p id="bar" class="m-bar" hidden></p>
-<main>
-  <div id="view"><p class="m-hint">読み込んでいます…</p></div>
-  <section id="edit" class="m-ed" hidden></section>   <!-- 文章の「画面で直す」。描き直しで中のアプリが読み直されないよう、#view の外に置く（manage.js の editShow） -->
-  <div id="foot"></div>
-</main>
-
-<!-- 公式アプリの「もと」（data.js）と、直した分を重ねるしくみ（content.js）。公開するときは、公式アプリの公開先のものを読む（道具/公開する.py） -->
-<script src="https://t3dining.github.io/baguru-app/js/data.js?v=98a58f4c"></script>
-<script src="https://t3dining.github.io/baguru-app/js/content.js?v=36ec9b9c"></script>
-<script src="js/texts.js?v=835d3701"></script>   <!-- 公式アプリの文章の一覧（道具/文章を集める.py が作る） -->
-<script src="js/manage.js?v=e3ee5bbe"></script>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box;background:#faf6f0;color:#221c18;font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif;text-align:center;line-height:1.7">
+<div style="max-width:420px">
+  <p style="font-size:20px;font-weight:700;margin:0 0 12px">バグるマネージは、<br>新しいアドレスに引っ越しました</p>
+  <p style="margin:0 0 8px;color:#675d55">ホーム画面に入れているときは、このアイコンを消して、新しいアドレスから入れ直してください。</p>
+  <p style="margin:0 0 24px;color:#675d55">合言葉は、新しいアドレスでもう一度入れてください。</p>
+  <a id="go" href="https://t3dining-store.github.io/baguru-manage/" style="display:inline-block;padding:14px 32px;border-radius:999px;background:#c7361d;color:#fff;font-size:17px;font-weight:700;text-decoration:none">新しいアドレスで開く</a>
+  <p style="margin:20px 0 0;font-size:13px;color:#a3988e">新しいアドレス<br>t3dining-store.github.io/baguru-manage/</p>
+</div>
+<script>document.getElementById('go').href += location.search;   // バグる Owner から開いた印（?from=owner など）は、そのまま渡す</script>
 </body>
 </html>
